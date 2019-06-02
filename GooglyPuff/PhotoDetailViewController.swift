@@ -50,10 +50,26 @@ final class PhotoDetailViewController: UIViewController {
       image.size.width <= photoImageView.bounds.size.width {
       photoImageView.contentMode = .center
     }
-    
-    let overlayImage = faceOverlayImageFrom(image)
-    fadeInNewImage(overlayImage)
+		
+		DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+			//long time task
+			print("function call!")
+			guard let self = self else { return }
+			let overlayImage = self.faceOverlayImageFrom(self.image)
+			//end long time task
+			DispatchQueue.main.async { [weak self] in
+				self?.fadeInNewImage(overlayImage)
+			}
+		}
   }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		print("view will appear")
+	}
+	
+	override func viewDidAppear(_ animated: Bool) {
+		print("view did appear")
+	}
 
 }
 

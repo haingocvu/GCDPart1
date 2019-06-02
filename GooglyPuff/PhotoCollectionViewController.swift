@@ -54,7 +54,12 @@ final class PhotoCollectionViewController: UICollectionViewController {
       selector: #selector(contentChangedNotification(_:)),
       name: PhotoManagerNotification.contentAdded,
       object: nil)
+		//showOrHideNavPrompt()
   }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		print("colection view will appear")
+	}
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -91,6 +96,16 @@ final class PhotoCollectionViewController: UICollectionViewController {
 private extension PhotoCollectionViewController {
   func showOrHideNavPrompt() {
     // Implement me!
+		let delay = 2.0
+		DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: { [weak self] in
+			guard let self = self else { return }
+			if PhotoManager.shared.photos.count > 0 {
+				self.navigationItem.prompt = nil
+			} else {
+				self.navigationItem.prompt = "Add photos with faces to Goolyify them!"
+			}
+			self.navigationController?.viewIfLoaded?.setNeedsLayout()
+		})
   }
   
   func downloadImageAssets() {
